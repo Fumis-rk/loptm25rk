@@ -1,15 +1,15 @@
-# Ranking FTMSP 2025
+# Ranking LOPTM 2025
 
-Este é o site oficial do **Ranking 2025 da Federação de Tênis de Mesa do Estado de São Paulo (FTMSP)**.
+Este é o site oficial do **LIGA OESTE PAULISTA DE TÊNIS DE MESA (LOPTM)**.
 
 ## 🚀 Como atualizar o ranking
 
 1. Abra o repositório no GitHub.
-2. Substitua o arquivo `ranking.csv` pelo novo CSV oficial atualizado.
+2. Substitua o arquivo `rankingloptm.csv` pelo novo CSV oficial atualizado.
 3. Confirme o commit.
 4. O Netlify fará o deploy automático.
 
-⚠️ Importante: **não altere o nome do arquivo** (`ranking.csv`).  
+⚠️ Importante: **não altere o nome do arquivo** (`rankingloptm.csv`).  
 O site depende dele para carregar os dados.
 
 ## 🎨 Cores do site
@@ -27,4 +27,4 @@ O site depende dele para carregar os dados.
 
 ---
 
-FTMSP © 2025 - Federação de Tênis de Mesa do Estado de São Paulo
+LOPTM © 2025 - LIGA OESTE PAULISTA DE TÊNIS DE MESA
