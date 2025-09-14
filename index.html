@@ -107,7 +107,7 @@
 
               <h3 className="text-xl font-semibold mb-2">Etapas</h3>
               <ul className="list-disc ml-6">
-                {Object.keys(atletaSelecionado).filter(k => k.startsWith("Etapa") || k.includes("Paulistão"))
+                {Object.keys(atletaSelecionado).filter(k => k.startsWith("Etapa") || k.includes("ETAPA"))
                   .map((etapa, i) => (
                     <li key={i}>
                       {etapa}: {atletaSelecionado[etapa] || 0}
