@@ -29,8 +29,9 @@
           download: true,
           header: true,
           complete: (results) => {
-            setData(results.data.filter(row => row["Nome"]));
-            const cats = [...new Set(results.data.map(row => row["Categoria/Classe"]).filter(Boolean))];
+            const rows = results.data.filter(row => row["Nome"]);
+            setData(rows);
+            const cats = [...new Set(rows.map(row => row["Categoria/Classe"]).filter(Boolean))];
             setCategorias(cats.sort());
           },
         });
@@ -38,52 +39,105 @@
 
       const atletas = data.filter(d => d["Categoria/Classe"] === categoriaSelecionada);
 
-      // Função para gerar PDF
+      const parseNum = (v) => {
+        if (v == null) return 0;
+        let s = String(v).trim();
+        if (s === "") return 0;
+        s = s.replace(/\./g, '');
+        s = s.replace(',', '.');
+        const n = parseFloat(s);
+        return isNaN(n) ? 0 : n;
+      };
+
       const gerarPDF = () => {
-        if (data.length === 0) return;
-
-        const headers = Object.keys(data[0]);
-        const body = [];
-        body.push(headers.map(h => ({ text: h, style: "tableHeader" })));
-
-        data.forEach((row, i) => {
-          body.push(headers.map(h => ({
-            text: row[h] || "",
-            fillColor: i % 2 === 0 ? "#f9f9f9" : null
-          })));
-        });
+        if (!data || data.length === 0) {
+          alert("CSV ainda não carregado.");
+          return;
+        }
 
         const hoje = new Date();
         const dataGeracao = hoje.toLocaleDateString("pt-BR") + " " + hoje.toLocaleTimeString("pt-BR");
 
-        const docDefinition = {
-          content: [
-            { text: "Ranking LOPTM 2025", style: "header", alignment: "center" },
-            { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin: [0, 0, 0, 15] },
-            {
-              table: {
-                headerRows: 1,
-                widths: Array(headers.length).fill("*"),
-                body: body
-              },
-              layout: {
-                fillColor: function (rowIndex) {
-                  return rowIndex === 0 ? "#1e40af" : null; // cabeçalho azul escuro
-                },
-                hLineColor: function () { return "#aaa"; },
-                vLineColor: function () { return "#aaa"; }
-              }
-            }
-          ],
-          styles: {
-            header: { fontSize: 20, bold: true, margin: [0, 0, 0, 5] },
-            subheader: { fontSize: 10, italics: true, margin: [0, 0, 0, 10] },
-            tableHeader: { bold: true, color: "white", alignment: "center" }
-          },
-          defaultStyle: { fontSize: 9 }
+        const montarTabela = (rows) => {
+          const headers = ["#", "Nome", "Equipe", "Categoria", "Pontos"];
+          const body = [];
+          body.push(headers.map(h => ({ text: h, style: "tableHeader" })));
+
+          rows.forEach((row, i) => {
+            const fill = i % 2 === 0 ? "#f9f9f9" : null;
+            const rank = i + 1;
+            const linha = [
+              { text: String(rank), alignment: "center", fillColor: fill },
+              { text: row["Nome"] || "", fillColor: fill },
+              { text: row["Equipe"] || "", fillColor: fill },
+              { text: row["Categoria/Classe"] || "", alignment: "center", fillColor: fill },
+              { text: row["Pontos"] || "", alignment: "right", fillColor: fill }
+            ];
+            body.push(linha);
+          });
+
+          const widths = ["auto", "3*", "3*", "2*", "auto"];
+          return { table: { headerRows: 1, widths, body }, layout: {
+            fillColor: function (rowIndex) { return rowIndex === 0 ? "#1e40af" : null; },
+            hLineColor: function () { return "#aaa"; },
+            vLineColor: function () { return "#aaa"; }
+          }};
         };
 
-        pdfMake.createPdf(docDefinition).download("rankingloptm.pdf");
+        if (categoriaSelecionada) {
+          let rows = data.filter(d => d["Categoria/Classe"] === categoriaSelecionada && d["Nome"]);
+          rows = rows.sort((a, b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"]));
+
+          const content = [
+            { text: `Ranking - ${categoriaSelecionada}`, style: "header", alignment: "center" },
+            { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin: [0, 0, 0, 10] },
+            montarTabela(rows)
+          ];
+
+          const docDefinition = {
+            pageSize: "A4",
+            pageOrientation: "portrait",
+            content,
+            styles: {
+              header: { fontSize: 18, bold: true, margin: [0, 0, 0, 6] },
+              subheader: { fontSize: 10, italics: true, margin: [0, 0, 0, 10] },
+              tableHeader: { bold: true, color: "white", alignment: "center" }
+            },
+            defaultStyle: { fontSize: 10 }
+          };
+
+          const safeFileName = `ranking_${categoriaSelecionada.replace(/[^\w\-]+/g, "_")}.pdf`;
+          pdfMake.createPdf(docDefinition).download(safeFileName);
+        } else {
+          const cats = [...new Set(data.map(r => r["Categoria/Classe"]).filter(Boolean))].sort();
+          const content = [
+            { text: "Ranking LOPTM 2025", style: "header", alignment: "center" },
+            { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin: [0, 0, 0, 10] }
+          ];
+
+          cats.forEach(cat => {
+            let rows = data.filter(d => d["Categoria/Classe"] === cat && d["Nome"]);
+            rows = rows.sort((a, b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"]));
+            if (rows.length === 0) return;
+            content.push({ text: cat, style: "catHeader", margin: [0, 8, 0, 4] });
+            content.push(montarTabela(rows));
+          });
+
+          const docDefinition = {
+            pageSize: "A4",
+            pageOrientation: "portrait",
+            content,
+            styles: {
+              header: { fontSize: 18, bold: true, margin: [0, 0, 0, 6] },
+              subheader: { fontSize: 10, italics: true, margin: [0, 0, 0, 10] },
+              catHeader: { fontSize: 14, bold: true, color: "#1e40af" },
+              tableHeader: { bold: true, color: "white", alignment: "center" }
+            },
+            defaultStyle: { fontSize: 10 }
+          };
+
+          pdfMake.createPdf(docDefinition).download("ranking_loptm.pdf");
+        }
       };
 
       return (
@@ -97,7 +151,7 @@
           <div className="flex justify-center mb-6">
             <button
               onClick={gerarPDF}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-red-700 transition"
             >
               📄 Baixar Ranking em PDF
             </button>
@@ -129,12 +183,13 @@
                   <th className="py-2 px-4">#</th>
                   <th className="py-2 px-4">Nome</th>
                   <th className="py-2 px-4">Equipe</th>
+                  <th className="py-2 px-4">Categoria</th>
                   <th className="py-2 px-4">Pontos</th>
                 </tr>
               </thead>
               <tbody>
                 {atletas
-                  .sort((a, b) => b["Pontos"] - a["Pontos"])
+                  .sort((a, b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"]))
                   .map((atleta, index) => (
                     <tr
                       key={index}
@@ -144,6 +199,7 @@
                       <td className="py-2 px-4">{index + 1}</td>
                       <td className="py-2 px-4">{atleta["Nome"]}</td>
                       <td className="py-2 px-4">{atleta["Equipe"]}</td>
+                      <td className="py-2 px-4">{atleta["Categoria/Classe"]}</td>
                       <td className="py-2 px-4">{atleta["Pontos"]}</td>
                     </tr>
                   ))}
@@ -162,18 +218,8 @@
               </button>
               <h2 className="text-2xl font-bold text-blue-700 mb-2">{atletaSelecionado["Nome"]}</h2>
               <p className="text-gray-700 mb-2"><b>Equipe:</b> {atletaSelecionado["Equipe"]}</p>
-              <p className="text-gray-700 mb-4"><b>Categoria:</b> {atletaSelecionado["Categoria/Classe"]}</p>
+              <p className="text-gray-700 mb-2"><b>Categoria:</b> {atletaSelecionado["Categoria/Classe"]}</p>
               <p className="text-lg font-bold text-gray-900 mb-4">Total de Pontos: {atletaSelecionado["Pontos"]}</p>
-
-              <h3 className="text-xl font-semibold mb-2">Etapas</h3>
-              <ul className="list-disc ml-6">
-                {Object.keys(atletaSelecionado).filter(k => k.startsWith("Etapa") || k.includes("ETAPA"))
-                  .map((etapa, i) => (
-                    <li key={i}>
-                      {etapa}: {atletaSelecionado[etapa] || 0}
-                    </li>
-                  ))}
-              </ul>
             </div>
           )}
         </div>
