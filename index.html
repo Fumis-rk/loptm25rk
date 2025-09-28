@@ -84,59 +84,64 @@
           }};
         };
 
-        if (categoriaSelecionada) {
-          let rows = data.filter(d => d["Categoria/Classe"] === categoriaSelecionada && d["Nome"]);
-          rows = rows.sort((a, b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"]));
-
-          const content = [
-            { text: `Ranking - ${categoriaSelecionada}`, style: "header", alignment: "center" },
-            { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin: [0, 0, 0, 10] },
-            montarTabela(rows)
-          ];
-
-          const docDefinition = {
-            pageSize: "A4",
-            pageOrientation: "portrait",
-            content,
-            styles: {
-              header: { fontSize: 18, bold: true, margin: [0, 0, 0, 6] },
-              subheader: { fontSize: 10, italics: true, margin: [0, 0, 0, 10] },
-              tableHeader: { bold: true, color: "white", alignment: "center" }
-            },
-            defaultStyle: { fontSize: 10 }
-          };
-
-          const safeFileName = `ranking_${categoriaSelecionada.replace(/[^\w\-]+/g, "_")}.pdf`;
-          pdfMake.createPdf(docDefinition).download(safeFileName);
-        } else {
-          const cats = [...new Set(data.map(r => r["Categoria/Classe"]).filter(Boolean))].sort();
-          const content = [
-            { text: "Ranking LOPTM 2025", style: "header", alignment: "center" },
-            { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin: [0, 0, 0, 10] }
-          ];
-
-          cats.forEach(cat => {
-            let rows = data.filter(d => d["Categoria/Classe"] === cat && d["Nome"]);
+        try {
+          if (categoriaSelecionada) {
+            let rows = data.filter(d => d["Categoria/Classe"] === categoriaSelecionada && d["Nome"]);
             rows = rows.sort((a, b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"]));
-            if (rows.length === 0) return;
-            content.push({ text: cat, style: "catHeader", margin: [0, 8, 0, 4] });
-            content.push(montarTabela(rows));
-          });
 
-          const docDefinition = {
-            pageSize: "A4",
-            pageOrientation: "portrait",
-            content,
-            styles: {
-              header: { fontSize: 18, bold: true, margin: [0, 0, 0, 6] },
-              subheader: { fontSize: 10, italics: true, margin: [0, 0, 0, 10] },
-              catHeader: { fontSize: 14, bold: true, color: "#1e40af" },
-              tableHeader: { bold: true, color: "white", alignment: "center" }
-            },
-            defaultStyle: { fontSize: 10 }
-          };
+            const content = [
+              { text: `Ranking - ${categoriaSelecionada}`, style: "header", alignment: "center" },
+              { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin: [0, 0, 0, 10] },
+              montarTabela(rows)
+            ];
 
-          pdfMake.createPdf(docDefinition).download("ranking_loptm.pdf");
+            const docDefinition = {
+              pageSize: "A4",
+              pageOrientation: "portrait",
+              content,
+              styles: {
+                header: { fontSize: 18, bold: true, margin: [0, 0, 0, 6] },
+                subheader: { fontSize: 10, italics: true, margin: [0, 0, 0, 10] },
+                tableHeader: { bold: true, color: "white", alignment: "center" }
+              },
+              defaultStyle: { fontSize: 10 }
+            };
+
+            const safeFileName = `ranking_${categoriaSelecionada.replace(/[^\w\-]+/g, "_")}.pdf`;
+            pdfMake.createPdf(docDefinition).download(safeFileName);
+          } else {
+            const cats = [...new Set(data.map(r => r["Categoria/Classe"]).filter(Boolean))].sort();
+            const content = [
+              { text: "Ranking LOPTM 2025", style: "header", alignment: "center" },
+              { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin: [0, 0, 0, 10] }
+            ];
+
+            cats.forEach(cat => {
+              let rows = data.filter(d => d["Categoria/Classe"] === cat && d["Nome"]);
+              rows = rows.sort((a, b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"]));
+              if (rows.length === 0) return;
+              content.push({ text: cat, style: "catHeader", margin: [0, 8, 0, 4] });
+              content.push(montarTabela(rows));
+            });
+
+            const docDefinition = {
+              pageSize: "A4",
+              pageOrientation: "portrait",
+              content,
+              styles: {
+                header: { fontSize: 18, bold: true, margin: [0, 0, 0, 6] },
+                subheader: { fontSize: 10, italics: true, margin: [0, 0, 0, 10] },
+                catHeader: { fontSize: 14, bold: true, color: "#1e40af" },
+                tableHeader: { bold: true, color: "white", alignment: "center" }
+              },
+              defaultStyle: { fontSize: 10 }
+            };
+
+            pdfMake.createPdf(docDefinition).download("ranking_loptm.pdf");
+          }
+        } catch (err) {
+          console.error("Erro ao gerar PDF:", err);
+          alert("Ocorreu um erro ao gerar o PDF. Abra o console para mais detalhes.");
         }
       };
 
@@ -151,7 +156,7 @@
           <div className="flex justify-center mb-6">
             <button
               onClick={gerarPDF}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
+              className="px-4 py-2 bg-blue-400 text-white rounded-lg shadow hover:bg-blue-500 transition"
             >
               📄 Baixar Ranking em PDF
             </button>
@@ -240,4 +245,3 @@
   </script>
 </body>
 </html>
-
