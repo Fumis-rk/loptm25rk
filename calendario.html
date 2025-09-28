@@ -5,27 +5,102 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calendário 2025 - LOPTM</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    @keyframes pulse-slow {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    .pulse-icon {
+      display: inline-block;
+      animation: pulse-slow 1.5s infinite;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <h1 class="text-3xl font-bold text-blue-700 mb-6 text-center">Calendário 2025 - LOPTM</h1>
-  <table class="min-w-full bg-white rounded-lg shadow overflow-hidden">
-    <thead class="bg-blue-700 text-white">
-      <tr>
-        <th class="py-2 px-4">Etapa</th>
-        <th class="py-2 px-4">Cidade</th>
-        <th class="py-2 px-4">Data</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b"><td class="py-2 px-4">1</td><td class="py-2 px-4">Marília</td><td class="py-2 px-4">29/03</td></tr>
-      <tr class="border-b"><td class="py-2 px-4">2</td><td class="py-2 px-4">Assis</td><td class="py-2 px-4">26/04</td></tr>
-      <tr class="border-b"><td class="py-2 px-4">3</td><td class="py-2 px-4">Ourinhos</td><td class="py-2 px-4">01/06</td></tr>
-      <tr class="border-b"><td class="py-2 px-4">4</td><td class="py-2 px-4">Araçatuba</td><td class="py-2 px-4">29/06</td></tr>
-      <tr class="border-b"><td class="py-2 px-4">5</td><td class="py-2 px-4">S.J.Rio Preto</td><td class="py-2 px-4">16/08</td></tr>
-      <tr class="border-b"><td class="py-2 px-4">6</td><td class="py-2 px-4">Birigui</td><td class="py-2 px-4">14/09</td></tr>
-      <tr class="border-b"><td class="py-2 px-4">7</td><td class="py-2 px-4">Bauru</td><td class="py-2 px-4">18/10</td></tr>
-      <tr><td class="py-2 px-4">8</td><td class="py-2 px-4">Pres. Prudente</td><td class="py-2 px-4">09/11</td></tr>
-    </tbody>
-  </table>
+<body class="bg-gray-50 text-gray-900 p-6 flex flex-col items-center min-h-screen">
+
+  <h1 class="text-4xl font-extrabold text-blue-700 mb-8 text-center">Calendário 2025 - LOPTM</h1>
+
+  <div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
+    <table class="min-w-full">
+      <thead class="bg-blue-600 text-white text-lg">
+        <tr>
+          <th class="py-3 px-6">#</th>
+          <th class="py-3 px-6">Cidade</th>
+          <th class="py-3 px-6">Data</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-800">
+        <tr class="bg-blue-50 hover:bg-blue-100 transition">
+          <td class="py-3 px-6 text-center font-semibold"><i class="fa-regular fa-calendar-days pulse-icon"></i> 1</td>
+          <td class="py-3 px-6 flex items-center justify-center gap-2">
+            <span class="bg-blue-400 text-white font-bold px-2 py-1 rounded-full">1</span>
+            Marília
+          </td>
+          <td class="py-3 px-6 text-center font-bold bg-blue-100 rounded-lg">29/03</td>
+        </tr>
+        <tr class="bg-green-50 hover:bg-green-100 transition">
+          <td class="py-3 px-6 text-center font-semibold"><i class="fa-regular fa-calendar-days pulse-icon"></i> 2</td>
+          <td class="py-3 px-6 flex items-center justify-center gap-2">
+            <span class="bg-green-400 text-white font-bold px-2 py-1 rounded-full">2</span>
+            Assis
+          </td>
+          <td class="py-3 px-6 text-center font-bold bg-green-100 rounded-lg">26/04</td>
+        </tr>
+        <tr class="bg-yellow-50 hover:bg-yellow-100 transition">
+          <td class="py-3 px-6 text-center font-semibold"><i class="fa-regular fa-calendar-days pulse-icon"></i> 3</td>
+          <td class="py-3 px-6 flex items-center justify-center gap-2">
+            <span class="bg-yellow-400 text-white font-bold px-2 py-1 rounded-full">3</span>
+            Ourinhos
+          </td>
+          <td class="py-3 px-6 text-center font-bold bg-yellow-100 rounded-lg">01/06</td>
+        </tr>
+        <tr class="bg-purple-50 hover:bg-purple-100 transition">
+          <td class="py-3 px-6 text-center font-semibold"><i class="fa-regular fa-calendar-days pulse-icon"></i> 4</td>
+          <td class="py-3 px-6 flex items-center justify-center gap-2">
+            <span class="bg-purple-400 text-white font-bold px-2 py-1 rounded-full">4</span>
+            Araçatuba
+          </td>
+          <td class="py-3 px-6 text-center font-bold bg-purple-100 rounded-lg">29/06</td>
+        </tr>
+        <tr class="bg-pink-50 hover:bg-pink-100 transition">
+          <td class="py-3 px-6 text-center font-semibold"><i class="fa-regular fa-calendar-days pulse-icon"></i> 5</td>
+          <td class="py-3 px-6 flex items-center justify-center gap-2">
+            <span class="bg-pink-400 text-white font-bold px-2 py-1 rounded-full">5</span>
+            S.J.Rio Preto
+          </td>
+          <td class="py-3 px-6 text-center font-bold bg-pink-100 rounded-lg">16/08</td>
+        </tr>
+        <tr class="bg-indigo-50 hover:bg-indigo-100 transition">
+          <td class="py-3 px-6 text-center font-semibold"><i class="fa-regular fa-calendar-days pulse-icon"></i> 6</td>
+          <td class="py-3 px-6 flex items-center justify-center gap-2">
+            <span class="bg-indigo-400 text-white font-bold px-2 py-1 rounded-full">6</span>
+            Birigui
+          </td>
+          <td class="py-3 px-6 text-center font-bold bg-indigo-100 rounded-lg">14/09</td>
+        </tr>
+        <tr class="bg-teal-50 hover:bg-teal-100 transition">
+          <td class="py-3 px-6 text-center font-semibold"><i class="fa-regular fa-calendar-days pulse-icon"></i> 7</td>
+          <td class="py-3 px-6 flex items-center justify-center gap-2">
+            <span class="bg-teal-400 text-white font-bold px-2 py-1 rounded-full">7</span>
+            Bauru
+          </td>
+          <td class="py-3 px-6 text-center font-bold bg-teal-100 rounded-lg">18/10</td>
+        </tr>
+        <tr class="bg-orange-50 hover:bg-orange-100 transition">
+          <td class="py-3 px-6 text-center font-semibold"><i class="fa-regular fa-calendar-days pulse-icon"></i> 8</td>
+          <td class="py-3 px-6 flex items-center justify-center gap-2">
+            <span class="bg-orange-400 text-white font-bold px-2 py-1 rounded-full">8</span>
+            Pres. Prudente
+          </td>
+          <td class="py-3 px-6 text-center font-bold bg-orange-100 rounded-lg">09/11</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="mt-6 text-gray-600 text-center">© 2025 Liga Oeste Paulista de Tênis de Mesa</p>
+
 </body>
 </html>
