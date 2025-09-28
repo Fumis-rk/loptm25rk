@@ -25,8 +25,8 @@
       const [atletaSelecionado, setAtletaSelecionado] = useState(null);
 
       useEffect(() => {
-        // CSV agora está na pasta public
-        Papa.parse("/rankingloptm.csv", {
+        // CSV junto ao index
+        Papa.parse("rankingloptm.csv", {
           download: true,
           header: true,
           complete: (results) => {
