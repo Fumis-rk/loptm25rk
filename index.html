@@ -51,44 +51,10 @@
 
           {/* Logo e título */}
           <img src="logo.png" alt="Logo LOPTM" className="block mx-auto h-24 mb-4" />
-          <h1 className="text-3xl font-bold text-blue-700 mb-2 text-center">Ranking LOPTM 2025</h1>
-          <p className="text-gray-700 text-center mt-2 mb-4">Clique no nome do atleta para mais detalhes</p>
+          <h1 className="text-3xl font-bold text-blue-700 mb-4 text-center">Ranking LOPTM 2025</h1>
 
-          {/* Seção de download de PDFs */}
-          <div class="mb-8">
-            <h2 className="text-xl font-bold mb-4 text-center">Baixe os resultados da etapa</h2>
-
-            {/* Ranking completo */}
-            <div className="flex justify-center mb-6">
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Ranking_Completo.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow">
-                📄 Ranking Completo em PDF
-              </a>
-            </div>
-
-            {/* Botões das etapas, responsivos */}
-            <div className="flex flex-wrap justify-center gap-4">
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa1_Marilia.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 1 - Marília</a>
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa2_Assis.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 2 - Assis</a>
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa3_Ourinhos.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 3 - Ourinhos</a>
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa4_Aracatuba.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 4 - Araçatuba</a>
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa5_SJRioPreto.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 5 - S.J.Rio Preto</a>
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa6_Birigui.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 6 - Birigui</a>
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa7_Bauru.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 7 - Bauru</a>
-              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa8_PresPrudente.pdf" target="_blank"
-                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 8 - Pres. Prudente</a>
-            </div>
-          </div>
-
-          {/* Seleção de categoria */}
-          <div className="mb-6 flex justify-center">
+          {/* Seletor e botão calendário */}
+          <div className="flex justify-center gap-4 mb-6 flex-wrap">
             <select
               className="p-2 border rounded-lg shadow"
               value={categoriaSelecionada}
@@ -97,6 +63,11 @@
               <option value="">Selecione uma Categoria</option>
               {categorias.map((c,i)=>(<option key={i} value={c}>{c}</option>))}
             </select>
+
+            <a href="calendario.html" target="_blank"
+               className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow">
+              CALENDÁRIO 2025
+            </a>
           </div>
 
           {/* Tabela de atletas */}
@@ -142,6 +113,37 @@
               </ul>
             </div>
           )}
+
+          {/* Rodapé com botões de download */}
+          <footer className="mt-10 p-4 bg-gray-200 rounded-lg">
+            <h2 className="text-xl font-bold mb-4 text-center">Baixe os resultados da etapa</h2>
+
+            <div className="flex justify-center mb-6">
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Ranking_Completo.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow">
+                📄 Ranking Completo em PDF
+              </a>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-4">
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa1_Marilia.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 1 - Marília</a>
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa2_Assis.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 2 - Assis</a>
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa3_Ourinhos.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 3 - Ourinhos</a>
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa4_Aracatuba.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 4 - Araçatuba</a>
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa5_SJRioPreto.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 5 - S.J.Rio Preto</a>
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa6_Birigui.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 6 - Birigui</a>
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa7_Bauru.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 7 - Bauru</a>
+              <a href="https://github.com/Fumis-rk/loptm25rk/raw/main/Etapa8_PresPrudente.pdf" target="_blank"
+                 className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow w-full sm:w-auto text-center">Etapa 8 - Pres. Prudente</a>
+            </div>
+          </footer>
 
         </div>
       );
