@@ -23,6 +23,7 @@
       const [categorias, setCategorias] = useState([]);
       const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
       const [atletaSelecionado, setAtletaSelecionado] = useState(null);
+      const [csvCarregado, setCsvCarregado] = useState(false);
 
       useEffect(() => {
         Papa.parse("rankingloptm.csv", {
@@ -33,24 +34,22 @@
             setData(rows);
             const cats = [...new Set(rows.map(row => row["Categoria/Classe"]).filter(Boolean))];
             setCategorias(cats.sort());
+            setCsvCarregado(true);
           },
         });
       }, []);
-
-      const atletas = data.filter(d => d["Categoria/Classe"] === categoriaSelecionada);
 
       const parseNum = (v) => {
         if (v == null) return 0;
         let s = String(v).trim();
         if (s === "") return 0;
-        s = s.replace(/\./g, '');
-        s = s.replace(',', '.');
+        s = s.replace(/\./g, '').replace(',', '.');
         const n = parseFloat(s);
         return isNaN(n) ? 0 : n;
       };
 
       const gerarPDF = () => {
-        if (!data || data.length === 0) {
+        if (!csvCarregado || data.length === 0) {
           alert("CSV ainda não carregado.");
           return;
         }
@@ -73,55 +72,54 @@
               { text: row["Pontos"] || "", alignment: "right", fillColor: fill }
             ]);
           });
-          return { table: { headerRows: 1, widths: ["auto","3*","3*","2*","auto"], body }, layout: {
-            fillColor: (rowIndex)=>rowIndex===0?"#1e40af":null,
-            hLineColor: ()=>"#aaa",
-            vLineColor: ()=>"#aaa"
-          }};
+          return {
+            table: { headerRows: 1, widths: ["auto","3*","3*","2*","auto"], body },
+            layout: {
+              fillColor: (rowIndex) => rowIndex === 0 ? "#1e40af" : null,
+              hLineColor: () => "#aaa",
+              vLineColor: () => "#aaa"
+            }
+          };
         };
 
-        try {
-          let content = [
-            { text: "Ranking LOPTM 2025", style: "header", alignment: "center" },
-            { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin:[0,0,0,10] }
-          ];
+        let content = [
+          { text: "Ranking LOPTM 2025", style: "header", alignment: "center" },
+          { text: `Gerado em: ${dataGeracao}`, style: "subheader", alignment: "center", margin:[0,0,0,10] }
+        ];
 
-          if (categoriaSelecionada) {
-            let rows = data.filter(d=>d["Categoria/Classe"]===categoriaSelecionada && d["Nome"]);
-            rows = rows.sort((a,b)=>parseNum(b["Pontos"])-parseNum(a["Pontos"]));
-            content.push({ text: `Categoria: ${categoriaSelecionada}`, style: "catHeader", margin:[0,8,0,4] });
+        if (categoriaSelecionada) {
+          let rows = data.filter(d => d["Categoria/Classe"] === categoriaSelecionada && d["Nome"]);
+          rows = rows.sort((a,b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"]));
+          content.push({ text: `Categoria: ${categoriaSelecionada}`, style: "catHeader", margin:[0,8,0,4] });
+          content.push(montarTabela(rows));
+        } else {
+          const cats = [...new Set(data.map(r => r["Categoria/Classe"]).filter(Boolean))].sort();
+          cats.forEach(cat => {
+            let rows = data.filter(d => d["Categoria/Classe"] === cat && d["Nome"]);
+            rows = rows.sort((a,b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"]));
+            if (rows.length === 0) return;
+            content.push({ text: cat, style: "catHeader", margin:[0,8,0,4] });
             content.push(montarTabela(rows));
-          } else {
-            const cats = [...new Set(data.map(r=>r["Categoria/Classe"]).filter(Boolean))].sort();
-            cats.forEach(cat=>{
-              let rows = data.filter(d=>d["Categoria/Classe"]===cat && d["Nome"]);
-              rows = rows.sort((a,b)=>parseNum(b["Pontos"])-parseNum(a["Pontos"]));
-              if (rows.length===0) return;
-              content.push({ text: cat, style: "catHeader", margin:[0,8,0,4] });
-              content.push(montarTabela(rows));
-            });
-          }
-
-          const docDefinition = {
-            pageSize:"A4",
-            pageOrientation:"portrait",
-            content,
-            styles: {
-              header:{fontSize:18,bold:true,margin:[0,0,0,6]},
-              subheader:{fontSize:10,italics:true,margin:[0,0,0,10]},
-              catHeader:{fontSize:14,bold:true,color:"#1e40af"},
-              tableHeader:{bold:true,color:"white",alignment:"center"}
-            },
-            defaultStyle:{fontSize:10}
-          };
-
-          pdfMake.createPdf(docDefinition).open();
-
-        } catch(err) {
-          console.error(err);
-          alert("Erro ao gerar PDF. Veja o console.");
+          });
         }
+
+        const docDefinition = {
+          pageSize: "A4",
+          pageOrientation: "portrait",
+          content,
+          styles: {
+            header: { fontSize: 18, bold: true, margin: [0,0,0,6] },
+            subheader: { fontSize: 10, italics: true, margin: [0,0,0,10] },
+            catHeader: { fontSize: 14, bold: true, color: "#1e40af" },
+            tableHeader: { bold: true, color: "white", alignment: "center" }
+          },
+          defaultStyle: { fontSize: 10 }
+        };
+
+        pdfMake.createPdf(docDefinition).open();
       };
+
+      const atletas = data.filter(d => d["Categoria/Classe"] === categoriaSelecionada);
 
       return (
         <div className="container mx-auto p-4 flex flex-col">
@@ -152,7 +150,7 @@
                 </tr>
               </thead>
               <tbody>
-                {atletas.sort((a,b)=>parseNum(b["Pontos"])-parseNum(a["Pontos"])).map((atleta,index)=>(
+                {atletas.sort((a,b) => parseNum(b["Pontos"]) - parseNum(a["Pontos"])).map((atleta,index)=>(
                   <tr key={index} className="border-b hover:bg-gray-100 cursor-pointer" onClick={()=>setAtletaSelecionado(atleta)}>
                     <td className="py-2 px-4">{index+1}</td>
                     <td className="py-2 px-4">{atleta["Nome"]}</td>
@@ -186,11 +184,11 @@
             <button
               onClick={gerarPDF}
               className={`px-4 py-2 rounded-lg shadow transition ${
-                data.length === 0
+                !csvCarregado
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-blue-400 text-white hover:bg-blue-500"
               }`}
-              disabled={data.length === 0}
+              disabled={!csvCarregado}
             >
               📄 Baixar Ranking em PDF
             </button>
